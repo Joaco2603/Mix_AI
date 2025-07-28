@@ -140,7 +140,7 @@ git clone https://github.com/Joaco2603/MixAi_microcontroler.git
 
 Este proyecto es Open Source bajo licencia MIT.
 
-- Authors
+## - Authors
 
 - [Joaquin Pappa](https://github.com/Joaco2603)
 - [Andres Calvo](https://github.com/AndresACV)
