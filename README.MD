@@ -148,7 +148,7 @@ Este proyecto es Open Source bajo licencia MIT.
 <br/>
 [Jeffry Valverde](https://github.com/JeffryVF)
 <br/>
-[Dylan]()
+[Dylan Josue](https://github.com/Djch18)
 
 ## 14. 📎 Anexos
 - Logs de pruebas
