@@ -142,7 +142,7 @@ Este proyecto es Open Source bajo licencia MIT.
 
 - Authors
 <br/> 
-[Joaquin Pappa](https://github.com/Joaco2603)
+Joaquin[Joaquin Pappa](https://github.com/Joaco2603)
 <br/>
 [Andres Calvo](https://github.com/AndresACV)
 <br/>
