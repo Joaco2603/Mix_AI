@@ -142,10 +142,10 @@ Este proyecto es Open Source bajo licencia MIT.
 
 - Authors
 
-[Joaquin Pappa](https://github.com/Joaco2603)
-[Andres Calvo](https://github.com/AndresACV)
-[Jeffry Valverde](https://github.com/JeffryVF)
-[Dylan Josue](https://github.com/Djch18)
+- [Joaquin Pappa](https://github.com/Joaco2603)
+- [Andres Calvo](https://github.com/AndresACV)
+- [Jeffry Valverde](https://github.com/JeffryVF)
+- [Dylan Josue](https://github.com/Djch18)
 
 ## 14. 📎 Anexos
 - Logs de pruebas
