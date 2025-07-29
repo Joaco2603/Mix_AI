@@ -15,16 +15,13 @@
   <a href="#" target="_blank">
     <img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="OpenCollective"/>
   </a>
-  <a href="#" target="_blank">
-    <img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Twitter Follow"/>
-  </a>
 </p>
 
 ---
 
 ## 1. 📄 Resumen del Proyecto
 
-Mix AI es un sistema de mezcla de audio en tiempo real basado en ESP32, diseñado para conciertos, estudios o prácticas personales. Utiliza un modelo de lenguaje (LLM) para adaptar los efectos y ecualización de forma automática según preferencias del usuario o el tipo de audio detectado.
+Mix AI es un sistema de mezcla de audio en tiempo real basado en ESP32, diseñado para conciertos, estudios o prácticas personales. Utiliza un modelo de lenguaje (LLM) para adaptar el audio de forma automática según preferencias del usuario o el tipo de audio detectado.
 
 ---
 
@@ -69,19 +66,39 @@ git clone https://github.com/Joaco2603/MixAi_microcontroler.git
 
 ## 4. 🧠 Arquitectura del Sistema
 
+### Entrada de audio
+
 ```bash
-[Micrófono] -> [ESP32] -> [Wi-Fi] -> [Servidor con LLM] -> [Respuesta] -> [Parlante o salida externa]
+[Micrófono] -> [ESP32 M5 V1.11] -> [Procesado de audio]
 ```
+
+### Salida de audio
+
+```bash
+[Micrófono] -> [ESP32 M5 V1.11] -> [Modulo I2S] -> [Salida en parlante]
+```
+
+### Model Context Protocol
+
+```bash
+[Micrófono o Texto desde el telefono] -> [ESP32] -> [MCP] -> [API Reactiva] -> [Modificación del audio en el ESP32 M5]
+```
+
 
 ## 5. 📈 Diagramas Eléctricos
 
 
 ## 6. ⚙️ Hardware Utilizado
 
-- #### 2 Esp32
-- #### Micrófono incorporado
-- #### PCM5102a externo
+ #### Esp32 de cr Cibernetica
+ #### Esp32 M5 Stack V1.11 incluye:
+- #### Micrófono SPM1423
+- #### Amplificador de audio I2S (NS4168)
+- #### Altavoz
+- #### Pantalla tactil
 - #### Cables jumper
+#### PCM5102a externo
+#### PCM5012 externo
 
 ## 7. 💻 Software y Librerías
 
@@ -122,7 +139,7 @@ git clone https://github.com/Joaco2603/MixAi_microcontroler.git
 
 ## 11. 🐛 Problemas Conocidos y Soluciones
 
-- #### No hay sonido: Verificar I2S o volumen en el backend.
+- #### No hay sonido: Verificar I2S o volumen.
 
 - #### Wi-Fi no conecta: Revisa credenciales en Config.h.
 
@@ -134,13 +151,13 @@ git clone https://github.com/Joaco2603/MixAi_microcontroler.git
 
 - #### Integración con asistentes de voz.
 
-- #### Mejora del procesamiento de efectos en el ESP32.
+- #### Integración del procesamiento de efectos en el ESP32.
 
 ## 13. 📜 Licencia y Créditos
 
 Este proyecto es Open Source bajo licencia MIT.
 
-## - Authors
+## Autores
 
 - [Joaquin Pappa](https://github.com/Joaco2603)
 - [Andres Calvo](https://github.com/AndresACV)
@@ -153,3 +170,4 @@ Este proyecto es Open Source bajo licencia MIT.
 - Referencias a datasheets
 
 - Links de componentes usados
+

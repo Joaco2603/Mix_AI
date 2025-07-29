@@ -24,7 +24,7 @@ Smart audio mixer for gigs and recordings, with LLM integration for real-time so
 
 ## 1. 📄 Project Overview
 
-Mix AI is an ESP32-based real-time audio mixing system designed for gigs, studios, or personal practice. It uses a language model (LLM) to automatically adapt effects and EQ based on user preferences or the type of audio detected.
+Mix AI is an ESP32-based real-time audio mixing system designed for gigs, studios, or personal practice. It uses a language model (LLM) to automatically adapt audio based on user preferences or the type of audio detected.
 
 ---
 
@@ -65,9 +65,24 @@ git clone https://github.com/Joaco2603/MixAi_microcontroler.git
 
 ## 4. 🧠 System Architecture
 
-``` tap
-[Microphone] -> [ESP32] -> [Wi-Fi] -> [Server with LLM] -> [Response] -> [Speaker or external output]
+### Audio input
+
+``` bash
+[Microphone] -> [ESP32 M5 V1.11] -> [Audio Processing]
 ```
+
+### Audio output
+
+```bash
+[Microphone] -> [ESP32 M5 V1.11] -> [I2S Module] -> [Speaker Output]
+```
+
+### Model Context Protocol
+
+```bash
+[Microphone or Text from Phone] -> [ESP32] -> [MCP] -> [Reactive API] -> [Update audio in ESP32 M5]
+```
+
 
 ## 5. 📈 Wiring Diagrams
 
@@ -85,7 +100,7 @@ git clone https://github.com/Joaco2603/MixAi_microcontroler.git
 - #### ArduinoIDE 1.8.x+
 
 ## Required Libraries
--#### Wi-Fi
+- #### Wi-Fi
 
 - #### HTTP Client
 
