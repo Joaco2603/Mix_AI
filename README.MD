@@ -15,14 +15,10 @@ README.md                # Descripción general del proyecto
 ```
 
 ## Información del Proyecto
-- **Jeffry Valverde** – Coordinador General, responsable de AI & IoT  
-  GitHub: [JeffryVF](https://github.com/JeffryVF)
-- **Joaquín Pappa** – Coordinador de Desarrollo Back-end & IoT  
-  GitHub: [Joaco2603](https://github.com/Joaco2603)
-- **Dylan Josue** – Coordinador de Desarrollo Front-end  
-  GitHub: [Djch18](https://github.com/Djch18)
-- **Andrés Calvo** – Coordinador de Procesos y Gestión de Proyecto
-  GitHub: [AndresACV](https://github.com/AndresACV)
+- **Jeffry Valverde** – Coordinador General, responsable de AI & IoT. GitHub: [JeffryVF](https://github.com/JeffryVF)
+- **Joaquín Pappa** – Coordinador de Desarrollo Back-end & IoT. GitHub: [Joaco2603](https://github.com/Joaco2603)
+- **Dylan Josue** – Coordinador de Desarrollo Front-end. GitHub: [Djch18](https://github.com/Djch18)
+- **Andrés Calvo** – Coordinador de Procesos y Gestión de Proyecto. GitHub: [AndresACV](https://github.com/AndresACV)
 
 ## Descripción y Justificación
 - **Problema que se aborda:**  
