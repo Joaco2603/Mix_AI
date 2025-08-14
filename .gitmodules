@@ -1,0 +1,6 @@
+[submodule "Mix_Ai_microcontroller"]
+	path = Mix_Ai_microcontroller
+	url = https://github.com/Joaco2603/Mix_Ai_microcontroller.git
+[submodule "microcontroller-firmware"]
+	path = microcontroller-firmware
+	url = https://github.com/Joaco2603/Mix_Ai_microcontroller.git
