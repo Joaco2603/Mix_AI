@@ -1,0 +1,9 @@
+{
+    "files.associations": {
+        "atomic": "cpp",
+        "fstream": "cpp",
+        "ostream": "cpp",
+        "sstream": "cpp",
+        "regex": "cpp"
+    }
+}
