@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class Linea {
-    String nombre;
-    Double volumen;
+public class Instrument {
+    String name;
+    Integer channel;
 }

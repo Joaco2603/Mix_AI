@@ -26,6 +26,5 @@ public class VolumeService {
                 .call()
                 .content();
         return new ChatResponse(chatId, answer);
-
     }
 }

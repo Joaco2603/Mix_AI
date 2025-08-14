@@ -1,68 +1,47 @@
 package com.cenfotec.volumemcp.repository;
 
 
-import com.cenfotec.volumemcp.models.Linea;
+import com.cenfotec.volumemcp.models.Instrument;
+import com.cenfotec.volumemcp.services.RestTemplateService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.tool.annotation.Tool;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.FileNotFoundException;
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @Service
 public class VolumeRepository {
 
-    private final List<Linea> lineas = List.of(
-            new Linea("Guitarra", 0.4),
-            new Linea("Bajo", 0.3),
-            new Linea("Piano", 0.5)
+    @Autowired
+    private RestTemplateService restTemplateService;
+
+    private final List<Instrument> instruments = List.of(
+            new Instrument("guitarra", 0),
+            new Instrument("voz", 1),
+            new Instrument("bateria", 2),
+            new Instrument("bajo", 3)
     );
 
+    @Tool(description = "Sets the volume of an instrument to a particular value")
+    ResponseEntity<String> setVolume(String idInstrument, Integer value) throws FileNotFoundException {
+        log.info("Setting {} to volume {}", idInstrument, value);
 
-    @Tool(description = "Get all lines. This is used to get the current state of the application")
-    List<Linea> getAllInstruments(){
-        log.info("Returning all instruments");
-        return lineas;
-    }
+        Instrument instrument = instruments.stream()
+                .filter(instr -> instr.getName().equals(idInstrument))
+                .findFirst()
+                .orElseThrow(() -> new FileNotFoundException("There is no instrument with id " + idInstrument));
 
+        ResponseEntity<String> remoteResponse = restTemplateService.setVolume(value, instrument.getChannel());
 
-    @Tool(description = "Get all lines which volume exceeds a particular value")
-    List<Linea> getAllInstrumentsOverVolume(Double volume){
-        log.info("Returning all instruments with volume over " + volume);
-        return lineas.stream().filter(linea -> linea.getVolumen() >= volume).toList();
-    }
-
-    @Tool(description = "Sets the volume of a line half of it's current value")
-    Linea setVolumeToHalf(String idLinea) throws FileNotFoundException {
-        log.info("Setting " + idLinea + " volume to half");
-        Linea theLinea = lineas.stream().filter(linea -> linea.getNombre().equals(idLinea)).findFirst().orElse(null);
-        if(theLinea != null){
-            theLinea.setVolumen(theLinea.getVolumen() / 2);
-        }else{
-            throw new FileNotFoundException("There is no line with the line ID");
+        if (remoteResponse.getStatusCode().is2xxSuccessful()) {
+            return ResponseEntity.ok(String.format("Instrument '%s' volume set to %d", idInstrument, value));
+        } else {
+            return ResponseEntity.status(remoteResponse.getStatusCode())
+                    .body("Remote service error: " + remoteResponse.getBody());
         }
-        return theLinea;
-    }
-
-    @Tool(description = "Sets the volume of a line to a particular value")
-    Linea setVolumeToLine(String idLinea, Double newVolume) throws FileNotFoundException {
-        Linea theLinea = lineas.stream().filter(linea -> linea.getNombre().equals(idLinea)).findFirst().orElse(null);
-        if(theLinea != null){
-            log.info("Setting " + idLinea + " to " + newVolume);
-            theLinea.setVolumen(newVolume);
-        }else{
-            throw new FileNotFoundException("There is no line with the line ID " + idLinea);
-        }
-        return theLinea;
-    }
-
-    @Tool(description = "Create a new linea with a particular ID and a particular volume specified by the user")
-    Linea createLine(String lineId, double volume){
-        log.info("Create new line " + lineId + " with volume " + volume);
-        Linea result = new Linea(lineId, volume);
-        lineas.add(result);
-        return result;
     }
 }
