@@ -3,6 +3,7 @@ package com.cenfotec.volumeapi.config;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.mcp.SyncMcpToolCallbackProvider;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -10,7 +11,8 @@ import org.springframework.context.annotation.Configuration;
 public class ChatConfig {
 
     @Bean
-    ChatClient chatClient(ChatModel chatModel, SyncMcpToolCallbackProvider toolCallbackProvider){
+    ChatClient chatClient(@Qualifier("vertexAiGeminiChat") ChatModel chatModel, SyncMcpToolCallbackProvider toolCallbackProvider){
+    // ChatClient chatClient(@Qualifier("ollamaChatModel") ChatModel chatModel, SyncMcpToolCallbackProvider toolCallbackProvider){
         return ChatClient
                 .builder(chatModel)
                 .defaultToolCallbacks(toolCallbackProvider.getToolCallbacks())
