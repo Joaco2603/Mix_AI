@@ -60,3 +60,5 @@ Desarrollar una mezcladora de audio inteligente potenciada por un modelo de leng
   - Cable de audio: Jack 3.5
   - Modulo: PCM5102
   - LLM/API: Local Llama3.1
+
+  - Este proyecto está bajo la licencia [Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)](https://creativecommons.org/licenses/by-nc/4.0/).
