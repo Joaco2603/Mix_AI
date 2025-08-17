@@ -10,4 +10,5 @@ import lombok.NoArgsConstructor;
 public class Instrument {
     String name;
     Integer channel;
+    Boolean mute;
 }

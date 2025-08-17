@@ -10,13 +10,12 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class ChatConfig {
 
-    @Bean
+    @Bean // Use @Qualifier("ollamaChatModel") or @Qualifier("vertexAiGeminiChat") depending on the chat model you want to inject
     ChatClient chatClient(@Qualifier("vertexAiGeminiChat") ChatModel chatModel, SyncMcpToolCallbackProvider toolCallbackProvider){
-    // ChatClient chatClient(@Qualifier("ollamaChatModel") ChatModel chatModel, SyncMcpToolCallbackProvider toolCallbackProvider){
         return ChatClient
                 .builder(chatModel)
                 .defaultToolCallbacks(toolCallbackProvider.getToolCallbacks())
-                .defaultSystem("You are a friend chat bot that helps manage line volumes at a mixer. don't answer any questions that are not provided in the tool callbakcs. Don't mention anything about tools. Use friendly language to respond that you won't answer any question s not associated to the tools.")
+                .defaultSystem("You are a friendly chatbot that helps manage mixer line volumes. Only answer questions that correspond to the provided tool callbacks. Do not answer questions outside of the tools, and do not mention the tools themselves. If a user asks something unrelated, politely tell them you can only help with mixer volume actions, using friendly language. Always answer in Spanish")
                 .build();
     }
 

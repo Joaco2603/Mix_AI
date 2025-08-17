@@ -17,10 +17,10 @@ public class RestTemplateService {
     @Autowired
     private RestTemplate restTemplate;
 
-    private final String baserUrl = "http://192.168.0.4/";
+    private final String baseUrl = "http://192.168.0.4/";
 
     public ResponseEntity<String> setVolume(Integer value, Integer channel) {
-        String url = baserUrl + "volume";
+        String url = baseUrl + "volume";
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
@@ -32,5 +32,38 @@ public class RestTemplateService {
         HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(body, headers);
 
         return restTemplate.postForEntity(url, requestEntity, String.class);
+    }
+
+    public ResponseEntity<String> setMute(Integer channel,  Boolean mute) {
+        String url = baseUrl + "muteChannel";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+        body.add("channel", channel.toString());
+        body.add("mute", String.valueOf(mute));
+
+        HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(body, headers);
+        return restTemplate.postForEntity(url, requestEntity, String.class);
+    }
+
+        public ResponseEntity<String> setMuteSpeaker() {
+        String  url = baseUrl + "muteSpeaker";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+        body.add("mute", "true");
+
+        HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(body, headers);
+        return restTemplate.postForEntity(url, requestEntity, String.class);
+    }
+
+    public ResponseEntity<String> getSpeakerStatus() {
+        return restTemplate.getForEntity(baseUrl + "speakerStatus", String.class);
+    }
+
+    public ResponseEntity<String> getStatusChannel(Integer channel) {
+        return restTemplate.getForEntity(baseUrl + "statusChannel/" + channel, String.class);
     }
 }

@@ -23,14 +23,14 @@ public class VolumeRepository {
     @Autowired
     private RestTemplateService restTemplateService;
 
+    /*** Helpers ***/
     private final List<Instrument> instruments = List.of(
-            new Instrument("guitarra", 0),
-            new Instrument("voz", 1),
-            new Instrument("bajo", 2),
-            new Instrument("bateria", 3)
+            new Instrument("guitarra", 0, false),
+            new Instrument("voz", 1, false),
+            new Instrument("bajo", 2, false),
+            new Instrument("bateria", 3, false)
     );
 
-    // Diccionario de sinónimos (normalizados)
     private final Map<String, String> synonyms = Map.of(
             "guitar", "guitarra",
             "drums", "bateria",
@@ -39,6 +39,30 @@ public class VolumeRepository {
             "vocals", "voz"
     );
 
+    private String normalize(String input) {
+        if (input == null) return "";
+        return Normalizer.normalize(input.trim().toLowerCase(), Normalizer.Form.NFD)
+                .replaceAll("\\p{M}", "");
+    }
+
+    private Instrument findInstrument(String idInstrument, Integer channel) throws FileNotFoundException {
+        if (channel != null) {
+            return instruments.stream()
+                    .filter(instr -> instr.getChannel().equals(channel))
+                    .findFirst()
+                    .orElseThrow(() -> new FileNotFoundException("No instrument with channel " + channel));
+        }
+
+        String normalized = normalize(idInstrument);
+        String finalNormalized = synonyms.getOrDefault(normalized, normalized);
+
+        return instruments.stream()
+                .filter(instr -> normalize(instr.getName()).equals(finalNormalized))
+                .findFirst()
+                .orElseThrow(() -> new FileNotFoundException("No instrument with id " + idInstrument));
+    }
+
+    /*** Tools ***/
     @Tool(description = "Gets the list of available instruments")
     public List<String> getAvailableInstruments() {
         return instruments.stream()
@@ -46,40 +70,95 @@ public class VolumeRepository {
                 .collect(Collectors.toList());
     }
 
-    @Tool(description = "Sets the volume of an instrument to a particular value")
+    @Tool(description = "Sets the volume of a specific instrument. You can provide either the instrument name or its channel number. If both are provided, the channel takes priority. The tool will automatically infer the missing value if only one is given.")
     ResponseEntity<String> setVolume(String idInstrument, Integer value) throws FileNotFoundException {
-        log.info("Setting {} to volume {}", idInstrument, value);
-
-        // Normalizamos
-        String normalized = normalize(idInstrument);
-
-        // Chequear si es un sinónimo y crear variable final
-        final String finalNormalized = synonyms.getOrDefault(normalized, normalized);
-
-        Instrument instrument = instruments.stream()
-                .filter(instr -> normalize(instr.getName()).equals(finalNormalized))
-                .findFirst()
-                .orElseThrow(() -> new FileNotFoundException("There is no instrument with id " + idInstrument));
+        Instrument instrument = findInstrument(idInstrument, null);
+        log.info("Setting {} to volume {}", instrument.getName(), value);
 
         try {
-            ResponseEntity<String> remoteResponse = restTemplateService.setVolume(value, instrument.getChannel());
-            if (remoteResponse.getStatusCode().is2xxSuccessful()) {
+            ResponseEntity<String> response = restTemplateService.setVolume(value, instrument.getChannel());
+            if (response.getStatusCode().is2xxSuccessful()) {
                 return ResponseEntity.ok(String.format("Instrument '%s' volume set to %d", instrument.getName(), value));
             } else {
-                return ResponseEntity.status(remoteResponse.getStatusCode())
-                        .body("Remote service error: " + remoteResponse.getBody());
+                return ResponseEntity.status(response.getStatusCode())
+                        .body("Remote service error: " + response.getBody());
             }
         } catch (Exception e) {
-            log.warn("Could not connect to remote device ({}): {}", "http://194.168.0.4/volume", e.getMessage());
+            log.warn("Could not connect to remote device: {}", e.getMessage());
             return ResponseEntity.ok(String.format("Instrument '%s' volume set to %d (simulated - device offline)", instrument.getName(), value));
         }
     }
 
-    private String normalize(String input) {
-        if (input == null) {
-            return "";
+    @Tool(description = "Mutes or unmutes a specific audio channel. You can provide either the instrument name or the channel number. If both are provided, the channel takes priority. If one is missing, the tool will infer it automatically from the provided value.")
+    ResponseEntity<String> setMute(String idInstrument, Integer channel, Boolean mute) throws FileNotFoundException {
+        Instrument instrument = findInstrument(idInstrument, channel);
+        log.info("Setting mute={} for instrument={} channel={}", mute, instrument.getName(), instrument.getChannel());
+
+        try {
+            ResponseEntity<String> response = restTemplateService.setMute(instrument.getChannel(), mute);
+            if (response.getStatusCode().is2xxSuccessful()) {
+                return ResponseEntity.ok(String.format("Channel '%s' mute set to %s", instrument.getChannel(), mute));
+            } else {
+                return ResponseEntity.status(response.getStatusCode())
+                        .body("Remote service error: " + response.getBody());
+            }
+        } catch (Exception e) {
+            log.warn("Could not connect to remote device: {}", e.getMessage());
+            return ResponseEntity.ok(String.format("Channel '%s' mute set to %s (simulated - device offline)", instrument.getChannel(), mute));
         }
-        return Normalizer.normalize(input.trim().toLowerCase(), Normalizer.Form.NFD)
-                .replaceAll("\\p{M}", "");
+    }
+
+    @Tool(description = "Mutes all speaker channels at once. This tool silences every available channel simultaneously and does not require specifying a channel number.")
+    ResponseEntity<String> setMuteSpeaker() {
+        log.info("Muting all speaker channels at once");
+
+        try {
+            ResponseEntity<String> response = restTemplateService.setMuteSpeaker();
+            if (response.getStatusCode().is2xxSuccessful()) {
+                return ResponseEntity.ok("Muted all available channels");
+            } else {
+                return ResponseEntity.status(response.getStatusCode())
+                        .body("Remote service error: " + response.getBody());
+            }
+        } catch (Exception e) {
+            log.warn("Could not connect to remote device: {}", e.getMessage());
+            return ResponseEntity.ok("Set all channels to mute (simulated - device offline)");
+        }
+    }
+
+    @Tool(description = "Gets the current overall volume of the speaker. This tool does not require any additional input and will return the speaker's current volume level.")
+    ResponseEntity<String> getSpeakerStatus() {
+        log.info("Getting speaker status");
+        try {
+            ResponseEntity<String> response = restTemplateService.getSpeakerStatus();
+
+            if (response.getStatusCode().is2xxSuccessful()) {
+                return ResponseEntity.ok(response.getBody());
+            } else {
+                return ResponseEntity.status(response.getStatusCode())
+                        .body("Remote service error: " + response.getBody());
+            }
+        } catch (Exception e) {
+            log.warn("Could not connect to remote device: {}", e.getMessage());
+            return ResponseEntity.ok("Get the current value of the speaker (simulated - device offline)");
+        }
+    }
+
+    @Tool(description = "Gets the current volume of a specific channel. You can provide either the instrument name or the channel number, or both. If one is null, the other will be used.")    ResponseEntity<String> getStatusChannel(String idInstrument, Integer channel) throws FileNotFoundException {
+        Instrument instrument = findInstrument(idInstrument, channel);
+        log.info("Getting status of instrument={} channel={}", instrument.getName(), instrument.getChannel());
+
+        try {
+            ResponseEntity<String> response = restTemplateService.getStatusChannel(instrument.getChannel());
+            if (response.getStatusCode().is2xxSuccessful()) {
+                return ResponseEntity.ok(response.getBody());
+            } else {
+                return ResponseEntity.status(response.getStatusCode())
+                        .body("Remote service error: " + response.getBody());
+            }
+        } catch (Exception e) {
+            log.warn("Could not connect to remote device: {}", e.getMessage());
+            return ResponseEntity.ok(String.format( "Get channel '%s' values (simulated - device offline)",  instrument.getChannel()));
+        }
     }
 }
