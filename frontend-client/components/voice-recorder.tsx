@@ -15,8 +15,8 @@ export function VoiceRecorder({ onTranscription, onCancel, isRecording }: VoiceR
   const [transcription, setTranscription] = useState("")
   const [recordingTime, setRecordingTime] = useState(0)
   const [audioLevel, setAudioLevel] = useState(0)
-  const intervalRef = useRef<NodeJS.Timeout>()
-  const recognitionRef = useRef<any>()
+  const intervalRef = useRef<NodeJS.Timeout | null>(null)
+  const recognitionRef = useRef<any | null>(null)
 
   useEffect(() => {
     if (isRecording) {

@@ -11,7 +11,6 @@ export function useAudio(isActive: boolean) {
 
   useEffect(() => {
     setMicSupported(!!navigator.mediaDevices?.getUserMedia);
-
     if (navigator.permissions) {
       navigator.permissions.query({ name: "microphone" as PermissionName }).then((result) => {
         setMicPermission(result.state as any);
