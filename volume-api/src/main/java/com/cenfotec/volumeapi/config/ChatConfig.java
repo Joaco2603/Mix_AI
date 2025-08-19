@@ -7,11 +7,11 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+
 @Configuration
 public class ChatConfig {
-
     @Bean // Use @Qualifier("ollamaChatModel") or @Qualifier("vertexAiGeminiChat") depending on the chat model you want to inject
-    ChatClient chatClient(@Qualifier("vertexAiGeminiChat") ChatModel chatModel, SyncMcpToolCallbackProvider toolCallbackProvider){
+    ChatClient chatClient(@Qualifier("vertexAiGeminiChat") ChatModel chatModel, SyncMcpToolCallbackProvider toolCallbackProvider) {
         return ChatClient
                 .builder(chatModel)
                 .defaultToolCallbacks(toolCallbackProvider.getToolCallbacks())

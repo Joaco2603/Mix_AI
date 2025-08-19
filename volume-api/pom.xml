@@ -46,7 +46,7 @@
             <scope>test</scope>
         </dependency>
 
-<!--        SpringAI Demo-->
+        <!--        SpringAI Demo-->
 
         <dependency>
             <groupId>org.springframework.ai</groupId>

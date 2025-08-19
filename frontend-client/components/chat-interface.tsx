@@ -7,11 +7,13 @@ import { WelcomeScreen } from "./welcome-screen";
 import { generateConversationTitle } from "@/utils/conversation-title";
 import type { Message } from "@/types/chat";
 import ChatInput from "./chat-input";
+import httpClient from "@/lib";
 
 export function ChatInterface() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isAssistantTyping, setIsAssistantTyping] = useState(false);
   const [conversationTitle, setConversationTitle] = useState<string>("");
+  const [conversationId, setConversationId] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(
     null!
   ) as React.RefObject<HTMLDivElement>;
@@ -33,6 +35,8 @@ export function ChatInterface() {
     }
   }, [messages, conversationTitle]);
 
+
+
   const handleSendMessage = async (content: string) => {
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -41,7 +45,6 @@ export function ChatInterface() {
       timestamp: new Date(),
       status: "sending",
     };
-
     setMessages((prev) => [...prev, userMessage]);
 
     // Update message status to delivered
@@ -53,22 +56,49 @@ export function ChatInterface() {
       );
     }, 500);
 
-    // Simulate assistant response
+    // Send request to actual API
     setIsAssistantTyping(true);
 
-    setTimeout(() => {
+    try {
+      // Make API call using the httpClient adapter
+      const response = await httpClient.post('/chat', {
+        question: content,
+        // Solo incluir chatId si ya existe
+        ...(conversationId && { chatId: conversationId }),
+      });
+
+      // Si es la primera vez, guardar el ID que retornó el servidor
+      if (!conversationId && response.chatId) {
+        setConversationId(response.chatId);
+      }
+
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
-        content: `I received your message: "${content}". This is a demo response from MixIA. In a real implementation, this would connect to an AI service for actual responses.`,
+        content: response.answer || "No response received",
         role: "assistant",
         timestamp: new Date(),
         status: "delivered",
       };
 
       setMessages((prev) => [...prev, assistantMessage]);
+    } catch (error) {
+      console.error('API Error:', error);
+
+      // Handle error by showing an error message
+      const errorMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        content: "Sorry, I encountered an error while processing your message. Please try again.",
+        role: "assistant",
+        timestamp: new Date(),
+        status: "error",
+      };
+
+      setMessages((prev) => [...prev, errorMessage]);
+    } finally {
       setIsAssistantTyping(false);
-    }, 2000);
+    }
   };
+
 
   return (
     <div className="flex flex-col h-full">
