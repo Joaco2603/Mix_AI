@@ -8,9 +8,10 @@
 ## Estructura del Repositorio
 ```bash
 /assets/                 # Recursos visuales y documentales (imágenes, diagramas, PDFs, etc.)
+/frontend-client/        # Aplicación Web desarrollada en NextJS para el manejdo del Mixer
+/microcontroller-firmware # Código del firmware de la Mixer
 /volume-api/             # Proyecto backend en Spring Boot que expone una API RESTful con integración de chat
 /volume-mcp/             # Implementación del Model Context Protocol (MCP) en Spring Boot
-/frontend-client/        # Aplicación Web desarrollada en NextJS para el manejdo del Mix
 /prototypes/             # Códigos experimentales o pruebas descartables para referencia futura
 README.md                # Descripción general del proyecto
 ```
