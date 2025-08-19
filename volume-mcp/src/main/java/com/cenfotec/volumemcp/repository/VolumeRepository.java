@@ -45,14 +45,7 @@ public class VolumeRepository {
                 .replaceAll("\\p{M}", "");
     }
 
-    private Instrument findInstrument(String idInstrument, Integer channel) throws FileNotFoundException {
-        if (channel != null) {
-            return instruments.stream()
-                    .filter(instr -> instr.getChannel().equals(channel))
-                    .findFirst()
-                    .orElseThrow(() -> new FileNotFoundException("No instrument with channel " + channel));
-        }
-
+    private Instrument findInstrumentByName(String idInstrument) throws FileNotFoundException {
         String normalized = normalize(idInstrument);
         String finalNormalized = synonyms.getOrDefault(normalized, normalized);
 
@@ -70,9 +63,9 @@ public class VolumeRepository {
                 .collect(Collectors.toList());
     }
 
-    @Tool(description = "Sets the volume of a specific instrument. You can provide either the instrument name or its channel number. If both are provided, the channel takes priority. The tool will automatically infer the missing value if only one is given.")
+    @Tool(description = "Sets the volume of a specific with name of the instrument.")
     ResponseEntity<String> setVolume(String idInstrument, Integer value) throws FileNotFoundException {
-        Instrument instrument = findInstrument(idInstrument, null);
+        Instrument instrument = findInstrumentByName(idInstrument);
         log.info("Setting {} to volume {}", instrument.getName(), value);
 
         try {
@@ -89,9 +82,9 @@ public class VolumeRepository {
         }
     }
 
-    @Tool(description = "Mutes or unmutes a specific audio channel. You can provide either the instrument name or the channel number. If both are provided, the channel takes priority. If one is missing, the tool will infer it automatically from the provided value.")
-    ResponseEntity<String> setMute(String idInstrument, Integer channel, Boolean mute) throws FileNotFoundException {
-        Instrument instrument = findInstrument(idInstrument, channel);
+    @Tool(description = "Mutes or unmutes a specific audio channel with name of the instrument.")
+    ResponseEntity<String> setMute(String idInstrument, Boolean mute) throws FileNotFoundException {
+        Instrument instrument = findInstrumentByName(idInstrument);
         log.info("Setting mute={} for instrument={} channel={}", mute, instrument.getName(), instrument.getChannel());
 
         try {
@@ -108,12 +101,12 @@ public class VolumeRepository {
         }
     }
 
-    @Tool(description = "Mutes all speaker channels at once. This tool silences every available channel simultaneously and does not require specifying a channel number.")
-    ResponseEntity<String> setMuteSpeaker() {
+    @Tool(description = "Mutes and unmutes all speaker channels at once. This tool silences or unmutes every available channel simultaneously and does not require specifying a channel number.")
+    ResponseEntity<String> setMuteSpeaker(Boolean mute) {
         log.info("Muting all speaker channels at once");
 
         try {
-            ResponseEntity<String> response = restTemplateService.setMuteSpeaker();
+            ResponseEntity<String> response = restTemplateService.setMuteSpeaker(mute);
             if (response.getStatusCode().is2xxSuccessful()) {
                 return ResponseEntity.ok("Muted all available channels");
             } else {
@@ -144,8 +137,9 @@ public class VolumeRepository {
         }
     }
 
-    @Tool(description = "Gets the current volume of a specific channel. You can provide either the instrument name or the channel number, or both. If one is null, the other will be used.")    ResponseEntity<String> getStatusChannel(String idInstrument, Integer channel) throws FileNotFoundException {
-        Instrument instrument = findInstrument(idInstrument, channel);
+    @Tool(description = "Gets the current volume of a specific channel with the name of the channe.")
+    ResponseEntity<String> getStatusChannel(String idInstrument) throws FileNotFoundException {
+        Instrument instrument = findInstrumentByName(idInstrument);
         log.info("Getting status of instrument={} channel={}", instrument.getName(), instrument.getChannel());
 
         try {

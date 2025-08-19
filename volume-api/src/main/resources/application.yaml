@@ -14,9 +14,9 @@ spring:
     vertex:
       ai:
         gemini:
-          project-id: ${GOOGLE_CLOUD_PROJECT_ID:your-google-cloud-project-id}
+          project-id: ${GOOGLE_CLOUD_PROJECT_ID}
           location: us-central1
-          api-key: ${GEMINI_API_KEY:your-gemini-api-key-here}
+          api-key: ${GEMINI_API_KEY}
           chat:
             model: gemini-1.5-pro
             options:

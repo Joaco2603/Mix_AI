@@ -47,23 +47,23 @@ public class RestTemplateService {
         return restTemplate.postForEntity(url, requestEntity, String.class);
     }
 
-        public ResponseEntity<String> setMuteSpeaker() {
+        public ResponseEntity<String> setMuteSpeaker(Boolean mute) {
         String  url = baseUrl + "muteSpeaker";
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
-        body.add("mute", "true");
+        body.add("mute", String.valueOf(mute));
 
         HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(body, headers);
         return restTemplate.postForEntity(url, requestEntity, String.class);
     }
 
     public ResponseEntity<String> getSpeakerStatus() {
-        return restTemplate.getForEntity(baseUrl + "speakerStatus", String.class);
+        return restTemplate.getForEntity(baseUrl + "speakerStatus/", String.class);
     }
 
     public ResponseEntity<String> getStatusChannel(Integer channel) {
-        return restTemplate.getForEntity(baseUrl + "statusChannel/" + channel, String.class);
+        return restTemplate.getForEntity(baseUrl + "channelStatus/" + channel, String.class);
     }
 }
