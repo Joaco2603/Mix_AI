@@ -1,20 +1,4 @@
-
 #include "WavReader.h"
-
-// WavReader: lector de archivos WAV desde SD.
-// Documentación (es):
-// - open(path): abre el archivo en la SD y valida el header WAV llamando
-//   a parseHeader(). Rellena variables internas como numChannels,
-//   sampleRate y bitsPerSample.
-// - readSamples(buffer, maxSamples): lee hasta `maxSamples` muestras
-//   (int16_t) desde la posición actual del archivo.
-// - parseHeader(): analiza chunks RIFF/WAVE, busca 'fmt ' y 'data' y
-//   guarda la posición de inicio de datos.
-// Casos borde:
-// - Manejo de archivos corruptos o chunks desconocidos: se saltan
-//   los chunks no reconocidos hasta encontrar 'fmt ' y 'data'.
-// - Si faltan campos críticos, la función retorna false y el archivo
-//   se considera no válido para reproducir.
 
 bool WavReader::open(const char* path) {
     Serial.printf("Opening WAV file: %s\n", path);
@@ -37,8 +21,6 @@ void WavReader::close() {
     if (file) file.close();
 }
 
-// Lee muestras como int16_t desde el archivo. Retorna la cantidad real
-// de muestras leídas.
 size_t WavReader::readSamples(int16_t* buffer, size_t maxSamples) {
     if (!file) return 0;
     return file.read((uint8_t*)buffer, maxSamples * sizeof(int16_t)) / sizeof(int16_t);
