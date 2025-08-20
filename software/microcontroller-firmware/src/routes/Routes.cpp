@@ -139,10 +139,10 @@ void Routes::init(AsyncWebServer &server, AudioMixer *mixer, AudioPlayer *player
         request->send(200, "application/json", json); });
 
            // Estado de todos los canales
-    server.on("/changeVolumenSpeaker", HTTP_GET, [mixer, player](AsyncWebServerRequest *request)
+    server.on("/changeVolumeSpeaker", HTTP_POST, [mixer, player](AsyncWebServerRequest *request)
               {
         if (!request->hasParam("value", true)) {
-            request->send(400, "application/json", "{\"error\":\"Missing channel or value\"}");
+            request->send(400, "application/json", "{\"error\":\"Missing value\"}");
             return;
         }
 
@@ -153,6 +153,6 @@ void Routes::init(AsyncWebServer &server, AudioMixer *mixer, AudioPlayer *player
             return;
         }
 
-        player->setMasterVolume(value / 100.0f);
+        player->setMasterVolume(value);
         request->send(200, "application/json", "{\"status\":\"volume set\"}"); });
 }

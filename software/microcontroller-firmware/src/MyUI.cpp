@@ -23,45 +23,51 @@ void MyUI::drawHome()
     tft.drawString(text_completed, 2, 20);
 
     // Botón subir volumen
-    // ui.addButton(TouchButton{
-    //     50, 160, 60, 60,
-    //     COL_PRIMARY, COL_BG, COL_ACCENT,
-    //     "Vol +",
-    //     [this]()
-    //     {
-    //         player->setMasterVolume(max(0, player->getVolume() + 10));
-    //     }});
+    ui.addButton(TouchButton{
+        50, 40, 60, 60,
+        COL_PRIMARY, COL_BG, COL_ACCENT,
+        "+",
+        [this]()
+        {
+            int stepVolume = player->getVolume(); // 0–21
+            float percent = (stepVolume / 21.0f) * 100.0f;
+            player->setMasterVolume(std::min(100.0f, percent + 10));
+            drawHome();
+        }});
 
     // Botón bajar volumen
-    // ui.addButton(TouchButton{
-    //     170, 160, 60, 60,
-    //     COL_SECONDARY, COL_BG, COL_ACCENT,
-    //     "Vol -",
-    //     [this]()
-    //     {
-    //         player->setMasterVolume(max(0, player->getVolume() - 10));
-    //     }});
+    ui.addButton(TouchButton{
+        170, 40, 60, 60,
+        COL_SECONDARY, COL_BG, COL_ACCENT,
+        "-",
+        [this]()
+        {
+            int stepVolume = player->getVolume(); // 0–21
+            float percent = (stepVolume / 21.0f) * 100.0f;
+            player->setMasterVolume(std::min(100.0f, percent - 10));
+            drawHome();
+        }});
 
     ui.addButton(TouchButton{
-        20, 80, 110, 50,
+        20, 105, 110, 60,
         COL_PRIMARY, COL_BG, COL_TEXT,
         "Guitarra",
         [this]()
         { currentInstrument = "Guitarra"; currentScreen = DETAIL; currentIndex = 0; }});
     ui.addButton(TouchButton{
-        170, 80, 110, 50,
+        170, 105, 110, 60,
         COL_SECONDARY, COL_BG, COL_ACCENT,
         "Voz",
         [this]()
         { currentInstrument = "Voz"; currentScreen = DETAIL; currentIndex = 1; }});
     ui.addButton(TouchButton{
-        20, 170, 110, 50,
+        20, 170, 110, 60,
         COL_ACCENT, COL_BG, COL_TEXT,
         "Bajo",
         [this]()
         { currentInstrument = "Bajo";currentScreen= DETAIL; currentIndex = 2; }});
     ui.addButton(TouchButton{
-        170, 170, 110, 50,
+        170, 170, 110, 60,
         TouchUI::rgb565(tft, 0x0E1526), COL_ACCENT, COL_TEXT,
         "Bateria",
         [this]()
@@ -96,7 +102,7 @@ void MyUI::drawDetail()
     ui.addButton(TouchButton{
         50, 160, 100, 60,
         COL_PRIMARY, COL_BG, COL_ACCENT,
-        "Vol +",
+        "+",
         [this]()
         {
             instrumentVolume = min(100, instrumentVolume + 10);
@@ -108,7 +114,7 @@ void MyUI::drawDetail()
     ui.addButton(TouchButton{
         170, 160, 100, 60,
         COL_SECONDARY, COL_BG, COL_ACCENT,
-        "Vol -",
+        "-",
         [this]()
         {
             instrumentVolume = max(0, instrumentVolume - 10);

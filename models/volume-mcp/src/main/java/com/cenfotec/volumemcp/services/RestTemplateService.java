@@ -10,7 +10,6 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-
 @Service
 public class RestTemplateService {
 
@@ -34,7 +33,7 @@ public class RestTemplateService {
         return restTemplate.postForEntity(url, requestEntity, String.class);
     }
 
-    public ResponseEntity<String> setMute(Integer channel,  Boolean mute) {
+    public ResponseEntity<String> setMute(Integer channel, Boolean mute) {
         String url = baseUrl + "muteChannel";
 
         HttpHeaders headers = new HttpHeaders();
@@ -47,8 +46,8 @@ public class RestTemplateService {
         return restTemplate.postForEntity(url, requestEntity, String.class);
     }
 
-        public ResponseEntity<String> setMuteSpeaker(Boolean mute) {
-        String  url = baseUrl + "muteSpeaker";
+    public ResponseEntity<String> setMuteSpeaker(Boolean mute) {
+        String url = baseUrl + "muteSpeaker";
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
@@ -66,4 +65,18 @@ public class RestTemplateService {
     public ResponseEntity<String> getStatusChannel(Integer channel) {
         return restTemplate.getForEntity(baseUrl + "channelStatus/" + channel, String.class);
     }
+
+    public ResponseEntity<String> changeVolumeSpeaker(Integer value) {
+        String url = baseUrl + "changeVolumeSpeaker";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+        body.add("value", value.toString());
+
+        HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(body, headers);
+        return restTemplate.postForEntity(url, requestEntity, String.class);
+    }
+
 }

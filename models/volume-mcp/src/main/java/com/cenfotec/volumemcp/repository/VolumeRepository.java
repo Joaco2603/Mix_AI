@@ -36,7 +36,8 @@ public class VolumeRepository {
             "drums", "bateria",
             "bass", "bajo",
             "voice", "voz",
-            "vocals", "voz"
+            "vocals", "voz",
+            "cantante", "voz"
     );
 
     private String normalize(String input) {
@@ -155,4 +156,23 @@ public class VolumeRepository {
             return ResponseEntity.ok(String.format( "Get channel '%s' values (simulated - device offline)",  instrument.getChannel()));
         }
     }
+
+    @Tool(description = "Changes the volume of a speaker, this mean all channels. Requires value that is the new volume of the mixer.")
+    public ResponseEntity<String> changeVolumeSpeaker(int value) throws FileNotFoundException {
+        try {
+            ResponseEntity<String> response = restTemplateService.changeVolumeSpeaker(value);
+            if (response.getStatusCode().is2xxSuccessful()) {
+                return ResponseEntity.ok(response.getBody());
+            } else {
+                return ResponseEntity.status(response.getStatusCode())
+                        .body("Remote service error: " + response.getBody());
+            }
+        } catch (Exception e) {
+            log.warn("Could not connect to remote device: {}", e.getMessage());
+            return ResponseEntity.ok(
+                    String.format("Change channel volume to %d (simulated - device offline)",
+                            value));
+        }
+    }
+    
 }
