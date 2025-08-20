@@ -7,22 +7,14 @@ Este documento muestra ejemplos sencillos para probar el sistema localmente (API
 - MCP server (puerto 8081):
 
 ```bash
-<<<<<<< HEAD
-cd volume-mcp
-=======
 cd models/volume-mcp
->>>>>>> 122384a318a4f112711a971912eab3eae974404e
 ./mvnw spring-boot:run
 ```
 
 - API server (puerto 8080):
 
 ```bash
-<<<<<<< HEAD
-cd volume-api
-=======
 cd software/volume-api
->>>>>>> 122384a318a4f112711a971912eab3eae974404e
 export GOOGLE_APPLICATION_CREDENTIALS="$HOME/.config/gcloud/service-account-key.json"
 export GOOGLE_CLOUD_PROJECT_ID="tu-project-id"
 export GEMINI_API_KEY="tu-api-key"
@@ -32,11 +24,7 @@ export GEMINI_API_KEY="tu-api-key"
 - Frontend (Next.js):
 
 ```bash
-<<<<<<< HEAD
-cd frontend-client
-=======
 cd software/frontend-client
->>>>>>> 122384a318a4f112711a971912eab3eae974404e
 npm install
 npm run dev
 # http://localhost:3000
