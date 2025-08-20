@@ -51,7 +51,7 @@ void loop() {
 
   if(WiFi.status()== WL_CONNECTED){   // Check WiFi connection status   
   
-   String url = String("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=") + API_KEY;
+   String url = String("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro:generateContent?key=") + API_KEY;
    http.begin(url);
 
    http.setTimeout(15000);  // Wait up to 15 sec if the server is slow

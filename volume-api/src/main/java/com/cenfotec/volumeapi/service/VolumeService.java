@@ -30,7 +30,7 @@ public class VolumeService {
         UUID chatId = Optional.ofNullable(chatRequest.chatId()).orElse(UUID.randomUUID());
         String chatIdStr = chatId.toString();
         List<Message> history = conversationHistory.computeIfAbsent(chatIdStr, k -> new ArrayList<>());
-        if (history.size() > 20) { // Limit to 10 messages (5 user + 5 assistant)
+        if (history.size() > 2) { // Limit to 10 messages (5 user + 5 assistant)
             history = history.subList(history.size() - 20, history.size());
             conversationHistory.put(chatIdStr, history);
         }

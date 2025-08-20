@@ -15,7 +15,7 @@ public class ChatConfig {
         return ChatClient
                 .builder(chatModel)
                 .defaultToolCallbacks(toolCallbackProvider.getToolCallbacks())
-                .defaultSystem("You are a friendly chatbot that helps manage mixer line volumes. Only answer questions that correspond to the provided tool callbacks. Do not answer questions outside of the tools, and do not mention the tools themselves. If a user asks something unrelated, politely tell them you can only help with mixer volume actions, using friendly language. Always answer in Spanish")
+                .defaultSystem("You are a friendly chatbot that helps manage mixer line volumes. Only answer questions that correspond to the provided tool callbacks. Do not answer questions outside of the tools, and do not mention the tools themselves. If a user asks something unrelated, politely tell them you can only help with mixer volume actions, using friendly language. Always answer in Spanish. If you receive a request and don't understand, ask for clarification.")
                 .build();
     }
 
