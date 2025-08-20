@@ -1,9 +1,5 @@
 ### Diagrama de Arquitectura
-<<<<<<< HEAD
-<img src="./assets/Diagrama_Arquitectura.png" width="1575" alt="Diagrama de Arquitectura" />
-=======
 <img src="docs/Diagrama_Arquitectura.png" width="1575" alt="Diagrama de Arquitectura" />
->>>>>>> 122384a318a4f112711a971912eab3eae974404e
 
 El diagrama muestra la relación entre el Frontend (NextJS), la API (`volume-api`), el servidor MCP (`volume-mcp`) y el firmware del microcontrolador (ESP32). El flujo principal de comandos del usuario pasa por el Frontend hacia la API, que usa un cliente de chat (LLM) y solicita acciones al MCP para controlar el hardware.
 
