@@ -1,0 +1,13 @@
+# Ignorar archivos de credenciales y secrets en prototipos y firmware
+**/secrets.h
+**/Config.h
+
+# PlatformIO / VSCode
+.pio
+.vscode/.browse.c_cpp.db*
+.vscode/c_cpp_properties.json
+.vscode/launch.json
+.vscode/ipch
+
+# Mantener ejemplo en repo
+!**/secrets.h.example

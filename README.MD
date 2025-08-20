@@ -1,20 +1,40 @@
-<div align="center">
-<img src="./assets/image.png" width="200" alt="AI Mix Logo" />
-</div>
-<h1 align="center">🚀 MIX AI</h1>
+<h1 align="center">MIX IA</h1>
 
----
+## Demostración de Funcionamiento
+<div align="center">
+  <a href="https://drive.google.com/file/d/1fF2qV_4I3gQiNyiULuws_Qy0VWonrJZW/view?usp=drivesdk">
+    <img src="./docs/logo.png" width="260" alt="Demo funcionamiento MIX IA" />
+  </a>
+</div>
+
 
 ## Estructura del Repositorio
-```bash
-/assets/                 # Recursos visuales y documentales (imágenes, diagramas, PDFs, etc.)
-/frontend-client/        # Aplicación Web desarrollada en NextJS para el manejdo del Mixer
-/microcontroller-firmware # Código del firmware de la Mixer
-/volume-api/             # Proyecto backend en Spring Boot que expone una API RESTful con integración de chat
-/volume-mcp/             # Implementación del Model Context Protocol (MCP) en Spring Boot
-/prototypes/             # Códigos experimentales o pruebas descartables para referencia futura
-README.md                # Descripción general del proyecto
+```text
+/docs/                   # Documentación extendida: diagramas (arquitectura/flujo), notas técnicas y PDFs
+/hardware/               # Esquemas eléctricos, diagramas de conexión, archivos CAD/3D (piezas impresas) y PCB
+/software/               # Código fuente principal: firmware (ESP32), backend (volume-api, volume-mcp), frontend-client
+/models/                 # Prompts, configuraciones y artefactos relacionados con LLM (Gemini / adaptadores locales)
+/tests/                  # Pruebas unitarias e integraciones (backend, MCP, frontend y mock firmware)
+/examples/               # Ejemplos reproducibles: curl, scripts de demo y casos de uso (shortcuts de comandos)
+README.md                # Descripción general del proyecto (este fichero)
+ARCHITECTURE.md          # Documentación detallada de la arquitectura y decisiones de diseño
+SETUP.md                 # Guía de instalación y despliegue (entornos local / producción)
+CONTRIBUTING.md          # Normas y plantillas para colaborar (PRs, Issues, pruebas)
+LICENSE                  # Licencia del proyecto (Creative Commons / otros)
+CHANGELOG.md             # Registro de cambios y versiones
 ```
+
+## Wiki
+
+Documentación extendida y guías: https://deepwiki.com/Joaco2603/Mix_AI
+
+## Dónde empezar
+
+- Quick start y pasos para ejecutar el sistema: `SETUP.md`.
+- Documentación técnica y decisiones de diseño: `ARCHITECTURE.md`.
+- Historial de cambios y versiones: `CHANGELOG.md`.
+- Cómo contribuir (PRs / Issues / normas): `CONTRIBUTING.md`.
+- Licencia del proyecto: `LICENSE`.
 
 ## Información del Proyecto
 - **Jeffry Valverde** – Coordinador General, responsable de AI & IoT. GitHub: [JeffryVF](https://github.com/JeffryVF)
@@ -50,220 +70,104 @@ Desarrollar una mezcladora de audio inteligente potenciada por un modelo de leng
   - Controlar niveles de salida y efectos de sonido en tiempo real.
   - Tener una interfaz física o digital intuitiva.
 
+- **Componentes:**
+  
+  - Microcontroladores usados:
+    - ESP32 M5Stack Core2 (M5Stack Core2 V1.1) — hardware principal del firmware y la interfaz táctil. Más info: https://docs.m5stack.com/
+    - Ideaboard — placa adicional usada en algunos prototipos (variante ESP32/Arduino).
 
-## Diseño Preliminar del Sistema
-- **Arquitectura:**  
-<img src="./assets/arquitectura.png" width="500" alt="Diagrama de arquitectura Mix AI" />
+  - Sensores / Actuadores / Periféricos:
+    - Módulo DAC PCM5102 (I2S) — salida de audio para altavoz externo. Datasheet: https://www.ti.com/lit/ds/symlink/pcm5102a.pdf
+    - Parlante (Rienok) — altavoz conectado a la salida del DAC.
+    - Cable de audio jack 3.5 — para salida analógica/conexiones externas.
+    - Tarjeta SD / almacenamiento (usado por `WavReader` / `AudioPlayer`) — controlador SD: https://www.arduino.cc/reference/en/libraries/sd/
+    - Interfaz táctil / botones del M5Stack Core2 (UI física) — ver docs M5Stack: https://docs.m5stack.com/
 
-- **Componentes previstos:**  
-  - Microcontrolador: ESP32 M5 V1.11
-  - Microcontrolador: Ideaboard
-  - Parlante: Rienok 
-  - Cable de audio: Jack 3.5
-  - Modulo: PCM5102
-  - LLM/API: Local Llama3.1
+  - LLM empleado (cloud / local):
+    - Gemini 2.5 Pro (cloud) — integrado vía Google Cloud / Vertex AI desde `volume-api`. Docs y guías: https://cloud.google.com/vertex-ai/docs/generative-ai
+    - (Opcional/local) Soporte para LLM local — el diseño permite usar alternativas locales (por ejemplo Llama 3.x) si se adapta el `VolumeService`/cliente de chat.
 
-## 🚀 Configuración y Ejecución
+  - Librerías clave (con documentación oficial):
+    - ESP32 Arduino core — documentación oficial: https://docs.espressif.com/projects/arduino-esp32/en/latest/
+    - Espressif I2S (I2S API para manejar PCM5102): https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-reference/peripherals/i2s.html
+    - PlatformIO (entorno/gestor de proyectos para el firmware): https://platformio.org/
+    - M5Stack / M5Core2 libraries (UI, display, touch): https://docs.m5stack.com/
+    - Arduino SD library (lectura/escritura de WAV desde SD): https://www.arduino.cc/reference/en/libraries/sd/
+    - Spring Boot (API & MCP services): https://spring.io/projects/spring-boot
+    - Spring AI / Chat integrations (cliente de chat usado en `volume-api`): https://spring.io/projects/spring-ai
+    - RestTemplate (cliente HTTP usado en `volume-mcp`): https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/client/RestTemplate.html
+    - Biblioteca de audio I2S incluida (repositorio local): `microcontroller-firmware/lib/ESP32-audioI2S/` — ver código incluido en el repo.
 
-### Prerequisitos
-- **JDK 21** instalado
-- **Git** para clonar el repositorio
-- **Google Cloud Account** con acceso a Vertex AI
-- **Gemini API Key** (desde Google AI Studio o Google Cloud)
+---
 
-### 🔧 Configuración Inicial
+## Progreso del Proyecto
 
-#### 1. Clonar el Repositorio
-```bash
-git clone <repository-url>
-cd Mix_AI
-```
+### 1. Modelo y impresión 3D
+<img src="./hardware/Paso_1.jpeg" width="400" alt="Modelo 3D en TinkerCad" />
 
-#### 2. Configurar Google Cloud Credentials
+Se diseñó un modelo en TinkerCad utilizando las medidas del ESP32 y el PCM5102 para ocultar los cables. La pieza fue impresa en 3D.
 
-##### Opción A: Service Account (Recomendado para Producción)
-1. Ir a [Google Cloud Console](https://console.cloud.google.com/)
-2. Crear o seleccionar un proyecto
-3. Habilitar la **Vertex AI API**
-4. Crear un **Service Account** con rol "Vertex AI User"
-5. Descargar el archivo JSON de credenciales
+## Link del Diagrama de la Pieza 3D:
+https://www.tinkercad.com/things/dmCiIZABGQX-brilliant-kieran-snicket/edit?returnTo=https%3A%2F%2Fwww.tinkercad.com%2Fdashboard&sharecode=J4qVyTr3OJeEgzTjWTHMvxQUkrp-lW0_cSCWPZfWp7A
 
-##### Opción B: Google AI Studio (Más Simple)
-1. Ir a [Google AI Studio](https://aistudio.google.com/)
-2. Crear un proyecto
-3. Generar una API Key
+### 2. Pintura inspirada en el logo
+<img src="./hardware/Paso_2.jpeg" width="400" alt="Pieza 3D pintada" />
 
-#### 3. Configurar Variables de Entorno
+La pieza 3D se pintó inspirándose en el logo definido para el sistema ciberfísico.
 
-Crear el archivo `volume-api/.env`:
-```bash
-GEMINI_API_KEY=tu-api-key-aqui
-GOOGLE_APPLICATION_CREDENTIALS=ruta-a-tu-archivo-credenciales.json
-GOOGLE_CLOUD_PROJECT_ID=tu-project-id
-```
+### 3. Soldadura de componentes
+<img src="./hardware/Paso_3.jpeg" width="400" alt="Soldadura PCM5102 a ESP32" />
 
-### 🐧 Configuración en Linux/WSL
+Se soldó el PCM5102 a la ESP32 para conectar un altavoz externo.
 
-#### 1. Verificar JDK 21
-```bash
-java -version
-# Si no tienes JDK 21:
-sudo apt update && sudo apt install openjdk-21-jdk -y
-```
+### 4. Ensamblaje final
+<img src="./hardware/Paso_4.jpeg" width="400" alt="Vista ensamblada y pintada" />
 
-#### 2. Colocar Credenciales
-```bash
-# Crear directorio
-mkdir -p ~/.config/gcloud/
+Vista del ESP32 con el PCM5102 soldado y pintado dentro de la pieza 3D.
 
-# Copiar tu archivo service-account-key.json a:
-# ~/.config/gcloud/service-account-key.json
-```
+### 5. Vista principal del proyecto
+<img src="./hardware/Paso_5.jpeg" width="400" alt="Vista principal MIXIA" />
 
-#### 3. Actualizar .env
-```bash
-# Editar volume-api/.env
-GOOGLE_APPLICATION_CREDENTIALS=/home/tu-usuario/.config/gcloud/service-account-key.json
-```
+Vista principal del Proyecto MIXIA funcionando en el ESP32.
 
-#### 4. Ejecutar el Sistema
-```bash
-# Terminal 1 - MCP Server (puerto 8081)
-cd volume-mcp
-./mvnw spring-boot:run
+---
 
-# Terminal 2 - API Server (puerto 8080)
-cd volume-api
-export GOOGLE_APPLICATION_CREDENTIALS="$HOME/.config/gcloud/service-account-key.json"
-export GOOGLE_CLOUD_PROJECT_ID="tu-project-id"
-export GEMINI_API_KEY="tu-api-key"
-./mvnw spring-boot:run
-```
+## Diagramas y Esquemas
 
-### 🪟 Configuración en Windows
+### Diagrama de Arquitectura
+<img src="./docs/Diagrama_Arquitectura.png" width="1575" alt="Diagrama de Arquitectura" />
 
-#### 1. Verificar JDK 21
-```powershell
-java -version
-# Si no tienes JDK 21, descargar desde:
-# https://adoptium.net/temurin/releases/?version=21
-```
+El diagrama muestra la relación entre el Frontend (NextJS), la API (`volume-api`), el servidor MCP (`volume-mcp`) y el firmware del microcontrolador (ESP32). El flujo principal de comandos del usuario pasa por el Frontend hacia la API, que usa un cliente de chat (LLM) y solicita acciones al MCP para controlar el hardware.
 
-#### 2. Colocar Credenciales
-```powershell
-# Crear directorio (PowerShell)
-New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\.config\gcloud"
+### Diagrama de Flujo de Datos
+<img src="./docs/Diagrama_Flujo.png" width="1575" alt="Diagrama de Flujo de Datos" />
 
-# Copiar tu archivo service-account-key.json a:
-# C:\Users\tu-usuario\.config\gcloud\service-account-key.json
-```
+Flujo de datos:
 
-#### 3. Actualizar .env
-```bash
-# Editar volume-api\.env
-GOOGLE_APPLICATION_CREDENTIALS=C:\Users\tu-usuario\.config\gcloud\service-account-key.json
-```
+- Usuario → Frontend: el usuario envía comandos por voz o texto.
+- Frontend → API (`/chat`): se realiza una petición REST con la instrucción.
+- API → LLM/ChatClient: la API formatea la petición y consulta al LLM para interpretar o extraer la intención.
+- API → MCP: si la intención requiere acción sobre hardware (ej. cambiar volumen, mute), la API invoca al MCP.
+- MCP → Microcontrolador: el MCP llama al firmware del ESP32 (por HTTP o RPC definido) para aplicar cambios (setVolume, mute, etc.).
+- Microcontrolador → Hardware: el firmware ajusta el `AudioMixer`, controla salidas (PCM5102) y recibe datos de sensores.
+- Microcontrolador → Frontend (opcional): el WebServer en el firmware puede exponer estado para refrescar la UI.
 
-#### 4. Ejecutar el Sistema
+### Esquema Eléctrico
+<img src="./hardware/Diagrama_Electrico.jpeg" width="700" alt="Diagrama Eléctrico" />
 
-##### PowerShell (Recomendado)
-```powershell
-# Terminal 1 - MCP Server (puerto 8081)
-cd volume-mcp
-.\mvnw.cmd spring-boot:run
+Conexiones de pines entre ESP32 M5Stack Core2 V1.1, módulo DAC PCM5102, sensores y actuadores (parlante, botones, etc.).
 
-# Terminal 2 - API Server (puerto 8080)
-cd volume-api
-$env:GOOGLE_APPLICATION_CREDENTIALS="$env:USERPROFILE\.config\gcloud\service-account-key.json"
-$env:GOOGLE_CLOUD_PROJECT_ID="tu-project-id"
-$env:GEMINI_API_KEY="tu-api-key"
-.\mvnw.cmd spring-boot:run
-```
+⚠️ Nota importante sobre pines
 
-##### Command Prompt
-```cmd
-REM Terminal 1 - MCP Server
-cd volume-mcp
-mvnw.cmd spring-boot:run
+Las conexiones mostradas en este diagrama aplican únicamente para el ESP32 M5Stack Core2 V1.1.
+Este modelo de ESP32 ya trae expuestos los pines necesarios para trabajar con el DAC PCM5102 mediante la interfaz I2S:
 
-REM Terminal 2 - API Server
-cd volume-api
-set GOOGLE_APPLICATION_CREDENTIALS=%USERPROFILE%\.config\gcloud\service-account-key.json
-set GOOGLE_CLOUD_PROJECT_ID=tu-project-id
-set GEMINI_API_KEY=tu-api-key
-mvnw.cmd spring-boot:run
-```
+- LRCK (WS) → Pin interno asignado como I2S_WS
+- BCK (SCK) → Pin interno asignado como I2S_BCK
+- DIN (DATA) → Pin interno asignado como I2S_DATA
+- GND y 3.3V disponibles en los headers laterales.
 
-### 🧪 Probar el Sistema
-
-#### Con curl (Linux/Windows con curl instalado)
-```bash
-# Probar lista de instrumentos
-curl -X POST http://localhost:8080/chat \
-  -H "Content-Type: application/json" \
-  -d '{"question": "¿Qué instrumentos están disponibles?"}'
-
-# Probar configuración de volumen
-curl -X POST http://localhost:8080/chat \
-  -H "Content-Type: application/json" \
-  -d '{"question": "Configura el volumen de guitarra a 75"}'
-
-# Probar respuesta fuera de scope
-curl -X POST http://localhost:8080/chat \
-  -H "Content-Type: application/json" \
-  -d '{"question": "¿Cuál es la capital de Francia?"}'
-```
-
-#### Con PowerShell (Windows)
-```powershell
-# Probar lista de instrumentos
-$body = @{ question = "¿Qué instrumentos están disponibles?" } | ConvertTo-Json
-Invoke-RestMethod -Uri "http://localhost:8080/chat" -Method POST -ContentType "application/json" -Body $body
-
-# Probar configuración de volumen
-$body2 = @{ question = "Configura el volumen de guitarra a 75" } | ConvertTo-Json
-Invoke-RestMethod -Uri "http://localhost:8080/chat" -Method POST -ContentType "application/json" -Body $body2
-```
-
-### 📊 Respuestas Esperadas
-
-- **✅ Instrumentos disponibles**: "¡Los instrumentos disponibles son guitarra, voz, batería y bajo!"
-- **✅ Configuración de volumen**: "¡Hecho! El volumen de la guitarra se ha configurado a 75."
-- **✅ Pregunta fuera de scope**: "Lo siento, no puedo responder preguntas que no estén relacionadas con el volumen del mezclador."
-
-### 🚨 Resolución de Problemas
-
-#### Error de credenciales
-- Verificar que el archivo JSON existe en la ubicación especificada
-- Confirmar que las variables de entorno están configuradas correctamente
-- Asegurar que el proyecto de Google Cloud tiene la Vertex AI API habilitada
-
-#### Puerto ocupado
-```bash
-# Linux/WSL
-pkill -f "spring-boot:run"
-
-# Windows
-netstat -ano | findstr :8080
-taskkill /PID <numero-pid> /F
-```
-
-#### Maven wrapper no funciona
-- Verificar permisos de ejecución: `chmod +x mvnw` (Linux)
-- Usar Maven global si está instalado: `mvn spring-boot:run`
-
-### 🔧 Arquitectura del Sistema
-
-El sistema consta de dos componentes principales:
-
-1. **volume-mcp** (Puerto 8081): Servidor MCP que expone herramientas para:
-   - Obtener lista de instrumentos disponibles
-   - Configurar volumen de instrumentos específicos
-
-2. **volume-api** (Puerto 8080): API REST que:
-   - Integra con Gemini para procesamiento de lenguaje natural
-   - Se conecta al servidor MCP para ejecutar acciones
-   - Expone endpoint `/chat` para interacciones
+Otros modelos de ESP32 o revisiones distintas del M5Stack pueden tener diferente mapeo de pines, por lo que este diagrama no es universal y debe adaptarse a la variante de hardware utilizada.
 
 ### 🎯 Funcionalidades Implementadas
 

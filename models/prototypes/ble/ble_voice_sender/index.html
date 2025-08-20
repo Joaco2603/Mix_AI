@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control de Voz para ESP32</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎤 Control de Voz ESP32 BLE</h1>
+            <p>Habla y envía comandos por Bluetooth Low Energy</p>
+        </div>
+
+        <div class="instructions">
+            <h3>📋 Instrucciones:</h3>
+            <p>1. Conecta al dispositivo BLE ESP32<br>
+                2. Presiona "Iniciar Reconocimiento"<br>
+                3. Habla claramente al micrófono<br>
+                4. El texto se enviará automáticamente al ESP32</p>
+        </div>
+
+        <div id="bluetoothStatus" class="status disconnected">
+            🔴 BLE Desconectado
+        </div>
+
+        <div class="controls">
+            <button id="connectBtn" class="btn-primary">🔗 Conectar BLE</button>
+            <button id="startBtn" class="btn-secondary" disabled>🎤 Iniciar Reconocimiento</button>
+            <button id="stopBtn" class="btn-danger" disabled>⏹️ Detener</button>
+        </div>
+
+        <div class="voice-indicator" id="voiceIndicator">
+            <div class="wave"></div>
+            <div class="wave"></div>
+            <div class="wave"></div>
+            <div class="wave"></div>
+            <div class="wave"></div>
+        </div>
+
+        <div id="transcript" class="transcript-area">
+            El texto reconocido aparecerá aquí...
+        </div>
+
+        <div class="log" id="log">
+            > Sistema iniciado. Esperando conexión BLE...<br>
+        </div>
+    </div>
+
+    <!-- scripts.js: maneja conexión BLE y reconocimiento de voz -->
+    <script src="scripts.js"></script>
+</body>
+
+</html>
