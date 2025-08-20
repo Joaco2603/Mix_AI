@@ -1,6 +1,3 @@
-// lib/api/index.js
-<<<<<<< HEAD
-=======
 /**
  * lib/index.ts
  *
