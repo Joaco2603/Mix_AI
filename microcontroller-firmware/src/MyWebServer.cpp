@@ -3,18 +3,20 @@
 #include <WiFi.h>
 #include <ESPAsyncWebServer.h>
 
+#include "Config.h"
 #include "MyWebServer.h"
 #include "AudioMixer.h"
+#include "AudioPlayer.h"
 #include "Routes.h"
 
-const char *ssid = "GARAJE";
-const char *password = "JEjb1307*2603*";
+const char *ssid = WIFI_SSID;
+const char *password = WIFI_PASSWORD;
 
 extern M5GFX display;
 
-AsyncWebServer webServer(8080);
+AsyncWebServer webServer(80);
 
-void MyWebServer::start(AudioMixer *mixer)
+void MyWebServer::start(AudioMixer *mixer, AudioPlayer *player)
 {
   // Conexión WiFi
   WiFi.begin(ssid, password);
@@ -40,7 +42,7 @@ void MyWebServer::start(AudioMixer *mixer)
   delay(3000);
 
   // Inicializar rutas HTTP
-  Routes::init(webServer, mixer);
+  Routes::init(webServer, mixer, player);
 
   // Iniciar servidor
   webServer.begin();

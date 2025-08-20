@@ -3,12 +3,6 @@
 </div>
 <h1 align="center">🚀 MIX AI</h1>
 
-<!-- ## 📝 Cambia esto
-
-- Para evitar errores de conversión entre tipos, usa:
-  - `min(static_cast<size_t>(my_uint32_var), my_size_t_var)`
-  - `min(my_uint32_var, static_cast<uint32_t>(my_size_t_var))`
-- Estos patrones ayudan a mantener la compatibilidad entre tipos `size_t` y `uint32_t` en tu código. -->
 
 ## 📄 Descripción
 
@@ -123,8 +117,5 @@ Abre el Monitor Serial: Una vez cargado, abre el Monitor Serial (Herramientas > 
 
 Verificación de la dirección IP: El ESP32 actúa como un servidor al conectarse a internet, y su dirección IP local puede cambiar cada vez que se reinicia. Es crucial que verifiques la dirección IP del dispositivo antes de realizar cualquier llamada a la API. Por ejemplo, en un momento podría ser 192.168.0.3 y, en otro, 192.168.0.4.
 
-## 📜 License
 
-MIX AI is an MIT-licensed open source project.
-
-Mix AI is [MIT licensed](LICENSE).
+- Este proyecto está bajo la licencia Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0).

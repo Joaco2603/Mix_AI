@@ -1,107 +1,68 @@
 #include <M5GFX.h>
 
 #include "AudioMixer.h"
+#include <cstring>
 
 extern M5GFX display;
 
-void AudioMixer::begin()
+void AudioMixer::begin() {}
+
+int AudioMixer::addTrack(const char *filename, float gain)
 {
-    trackCount = 0;
-    for (int i=0;i<MAX_TRACKS;i++){
-        tracks[i].isActive = false;
-        tracks[i].gain = 1.0f;
+    for (int i = 0; i < MAX_TRACKS; i++)
+    {
+        if (!channels[i].isActive())
+        {
+            if (channels[i].load(filename, gain))
+            {
+                return i;
+            }
+            return -1;
+        }
     }
+    return -1;
 }
 
-int AudioMixer::addTrack(const char* filename, float gain)
+MixerChannel &AudioMixer::getChannel(int index)
 {
-    if (!filename) {
-        printf("ERROR: filename is NULL\n");
-        return -1;
-    }
-
-    if (trackCount >= MAX_TRACKS) {
-        printf("ERROR: too many tracks\n");
-        return -1;
-    }
-
-    printf("Opening track at index %d\n", trackCount);
-    bool success = tracks[trackCount].track.open(filename);
-    printf("Track open result: %s\n", success ? "success" : "failed");
-
-    if (!success) return -1;
-
-    // **Asignar antes de devolver**
-    tracks[trackCount].gain = gain;
-    tracks[trackCount].isActive = true;
-
-    int assignedIndex = trackCount;
-    trackCount++;
-    return assignedIndex;
+    return channels[index];
 }
 
-void AudioMixer::setChannelVolume(int channel, float gain)
+const MixerChannel &AudioMixer::getChannel(int index) const
 {
-    if (channel < 0 || channel >= MAX_TRACKS) {
-        printf("ERROR: Canal fuera de rango\n");
-        return;
-    }
-
-    // Mejor debug: imprime 'this' y la dirección de tracks
-    Serial.printf("setChannelVolume this=%p tracks=%p channel=%d\n",
-                  (void*)this, (void*)tracks, channel);
-
-    tracks[channel].gain = gain;
+    return channels[index];
 }
 
 size_t AudioMixer::mix(int16_t *outBuffer, size_t numSamples)
 {
-    Serial.printf("mix this=%p tracks=%p trackCount=%d\n",
-                  (void*)this, (void*)tracks, trackCount);
+    std::memset(outBuffer, 0, numSamples * sizeof(int16_t));
 
-    if (!outBuffer || numSamples == 0)
-        return 0;
-
-    // Usar calloc-like behaviour
-    memset(outBuffer, 0, sizeof(int16_t) * numSamples);
-
-    bool hasActiveAudio = false;
-    // Evitar new/delete en cada iteración si podés; pero dejo igual por claridad
-    for (int i = 0; i < trackCount; ++i)
+    for (auto &channel : channels)
     {
-        if (!tracks[i].isActive)
-            continue;
-
-        int16_t *temp = new int16_t[numSamples];
-        size_t read = tracks[i].track.getSamples(temp, numSamples);
-
-        if (read > 0)
+        if (channel.isActive())
         {
-            hasActiveAudio = true;
+            int16_t tempBuffer[512];
+            size_t samplesRead = channel.readSamples(tempBuffer, numSamples);
 
-            for (size_t j = 0; j < read; ++j)
+            for (size_t i = 0; i < samplesRead; i++)
             {
-                // aplicar ganancia en float con saturación
-                int32_t sample = (int32_t)( (float)temp[j] * tracks[i].gain );
-                int32_t mixed = (int32_t)outBuffer[j] + sample;
-
-                if (mixed > 32767) mixed = 32767;
-                if (mixed < -32768) mixed = -32768;
-
-                outBuffer[j] = (int16_t)mixed;
+                int32_t mixed = outBuffer[i] + static_cast<int32_t>(tempBuffer[i] * (!channel.isMuted() ? channel.getGain(): 0.0f));
+                if (mixed > INT16_MAX)
+                    mixed = INT16_MAX;
+                if (mixed < INT16_MIN)
+                    mixed = INT16_MIN;
+                outBuffer[i] = static_cast<int16_t>(mixed);
             }
         }
-
-        delete[] temp;
     }
-    return hasActiveAudio ? numSamples : 0;
+    return numSamples;
 }
 
 bool AudioMixer::isActive() const
 {
-    for (int i = 0; i < trackCount; ++i)
+    for (const auto &channel : channels)
     {
-        if (tracks[i].isActive)
+        if (channel.isActive())
             return true;
     }
     return false;

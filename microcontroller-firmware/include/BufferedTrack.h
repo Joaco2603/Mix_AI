@@ -20,6 +20,7 @@ private:
     int16_t internalBuffer[BUFFER_SIZE];
     size_t bufferIndex = 0;
     size_t bufferFill = 0;
+    int muted = 0;
     bool active = false;
 };
 
