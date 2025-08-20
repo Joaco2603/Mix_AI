@@ -5,7 +5,6 @@
  * cambiar el backend en desarrollo, actualizar `API_BASE_URL` o usar
  * variables de entorno según el despliegue.
  */
->>>>>>> 122384a318a4f112711a971912eab3eae974404e
 import { createHttpClient } from './adapter';
 
 const API_BASE_URL = 'http://localhost:8080';
