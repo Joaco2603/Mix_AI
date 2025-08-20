@@ -64,19 +64,11 @@ GOOGLE_APPLICATION_CREDENTIALS=/home/tu-usuario/.config/gcloud/service-account-k
 #### 4. Ejecutar el Sistema
 ```bash
 # Terminal 1 - MCP Server (puerto 8081)
-<<<<<<< HEAD
-cd volume-mcp
-./mvnw spring-boot:run
-
-# Terminal 2 - API Server (puerto 8080)
-cd volume-api
-=======
 cd models/volume-mcp
 ./mvnw spring-boot:run
 
 # Terminal 2 - API Server (puerto 8080)
 cd software/volume-api
->>>>>>> 122384a318a4f112711a971912eab3eae974404e
 export GOOGLE_APPLICATION_CREDENTIALS="$HOME/.config/gcloud/service-account-key.json"
 export GOOGLE_CLOUD_PROJECT_ID="tu-project-id"
 export GEMINI_API_KEY="tu-api-key"
@@ -112,19 +104,11 @@ GOOGLE_APPLICATION_CREDENTIALS=C:\Users\tu-usuario\.config\gcloud\service-accoun
 ##### PowerShell (Recomendado)
 ```powershell
 # Terminal 1 - MCP Server (puerto 8081)
-<<<<<<< HEAD
-cd volume-mcp
-.\mvnw.cmd spring-boot:run
-
-# Terminal 2 - API Server (puerto 8080)
-cd volume-api
-=======
 cd models/volume-mcp
 .\mvnw.cmd spring-boot:run
 
 # Terminal 2 - API Server (puerto 8080)
 cd software/volume-api
->>>>>>> 122384a318a4f112711a971912eab3eae974404e
 $env:GOOGLE_APPLICATION_CREDENTIALS="$env:USERPROFILE\.config\gcloud\service-account-key.json"
 $env:GOOGLE_CLOUD_PROJECT_ID="tu-project-id"
 $env:GEMINI_API_KEY="tu-api-key"
@@ -134,19 +118,11 @@ $env:GEMINI_API_KEY="tu-api-key"
 ##### Command Prompt
 ```cmd
 REM Terminal 1 - MCP Server
-<<<<<<< HEAD
-cd volume-mcp
-mvnw.cmd spring-boot:run
-
-REM Terminal 2 - API Server
-cd volume-api
-=======
 cd models/volume-mcp
 mvnw.cmd spring-boot:run
 
 REM Terminal 2 - API Server
 cd software/volume-api
->>>>>>> 122384a318a4f112711a971912eab3eae974404e
 set GOOGLE_APPLICATION_CREDENTIALS=%USERPROFILE%\.config\gcloud\service-account-key.json
 set GOOGLE_CLOUD_PROJECT_ID=tu-project-id
 set GEMINI_API_KEY=tu-api-key
