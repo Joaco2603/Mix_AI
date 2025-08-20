@@ -1,6 +1,6 @@
 <h1 align="center">MIX IA</h1>
 
-## Demostración de Funcionamiento
+## Demostración de Funcionamiento (haz click en el logo)
 <div align="center">
   <a href="https://drive.google.com/file/d/1fF2qV_4I3gQiNyiULuws_Qy0VWonrJZW/view?usp=drivesdk">
     <img src="./docs/logo.png" width="260" alt="Demo funcionamiento MIX IA" />
