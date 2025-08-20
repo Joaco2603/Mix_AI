@@ -18,6 +18,16 @@ interface ChatComposerProps {
   onSendMessage: (message: string) => void;
 }
 
+/**
+ * ChatInput
+ *
+ * Componente que maneja la entrada de texto y la grabación por voz.
+ * - Soporta entrada por teclado y reconocimiento de voz (Web Speech API)
+ * - Expone `onSendMessage` con el texto final enviado por el usuario
+ *
+ * Props:
+ * - onSendMessage: (message: string) => void
+ */
 export default function ChatInput({ onSendMessage }: ChatComposerProps) {
   const [input, setInput] = useState("");
   const {

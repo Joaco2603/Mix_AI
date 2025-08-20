@@ -11,6 +11,17 @@ interface VoiceRecorderProps {
   isRecording: boolean
 }
 
+/**
+ * VoiceRecorder
+ *
+ * Componente que gestiona la grabación por voz usando Web Speech API.
+ * - onTranscription: llamado con el texto final transcrito
+ * - onCancel: cancelar la grabación
+ * - isRecording: flag controlado por el padre
+ *
+ * Internamente simula audio level en entornos sin soporte y limpia recursos
+ * al desmontarse.
+ */
 export function VoiceRecorder({ onTranscription, onCancel, isRecording }: VoiceRecorderProps) {
   const [transcription, setTranscription] = useState("")
   const [recordingTime, setRecordingTime] = useState(0)

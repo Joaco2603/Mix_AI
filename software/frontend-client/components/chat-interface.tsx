@@ -9,6 +9,18 @@ import type { Message } from "@/types/chat";
 import ChatInput from "./chat-input";
 import httpClient from "@/lib";
 
+/**
+ * ChatInterface
+ *
+ * Componente principal que orquesta la conversación entre el usuario
+ * y el asistente. Gestiona el estado local de mensajes, título de la
+ * conversación y la comunicación con la API mediante el adaptador HTTP.
+ *
+ * Responsabilidades:
+ * - Mantener la lista de mensajes y estados (typing, conversationId)
+ * - Enviar peticiones al backend usando `httpClient`
+ * - Generar título de conversación una vez haya suficiente contexto
+ */
 export function ChatInterface() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isAssistantTyping, setIsAssistantTyping] = useState(false);
@@ -59,7 +71,7 @@ export function ChatInterface() {
     // Send request to actual API
     setIsAssistantTyping(true);
 
-    try {
+  try {
       // Make API call using the httpClient adapter
       const response = await httpClient.post('/chat', {
         question: content,

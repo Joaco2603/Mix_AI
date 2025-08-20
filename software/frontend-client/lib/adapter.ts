@@ -1,4 +1,11 @@
 // lib/api/adapter.js
+/**
+ * adapter.ts
+ *
+ * Define una interfaz HttpClient y dos adaptadores (Fetch y Axios) para
+ * desacoplar la lógica de red del resto de la aplicación. Esto facilita
+ * testing y la sustitución por alternativas en distintos entornos.
+ */
 export interface HttpClient {
   get: (url: string, config?: RequestConfig) => Promise<any>;
   post: (url: string, data?: any, config?: RequestConfig) => Promise<any>;
@@ -12,6 +19,7 @@ export interface RequestConfig {
   timeout?: number;
 }
 
+// Implementaciones concretas:
 export class FetchAdapter implements HttpClient {
   private baseUrl: string;
 

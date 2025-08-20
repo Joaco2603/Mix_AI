@@ -1,3 +1,8 @@
+/**
+ * ChatHeader
+ *
+ * Barra superior de la aplicación. Componente puramente presentacional.
+ */
 export function ChatHeader() {
   return (
     <header className="flex items-center justify-between p-4 border-b border-[#2a2a3e] bg-[#0D0D1A]">
